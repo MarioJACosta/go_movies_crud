@@ -41,6 +41,18 @@ func deleteMovie(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(movies)
 }
 
+func getMovie(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+	params := mux.Vars(r)
+
+	for _, item := range movies {
+		if item.ID == params["id"] {
+			json.NewEncoder(w).Encode(item)
+			return
+		}
+	}
+}
+
 func main() {
 	r := mux.NewRouter()
 
@@ -49,7 +61,7 @@ func main() {
 
 	// Route Handlers / Endpoints
 	r.HandleFunc("/api/movies", getMovies).Methods("GET")
-	//r.HandleFunc("/api/movies/{id}", getMovie).Methods("GET")
+	r.HandleFunc("/api/movies/{id}", getMovie).Methods("GET")
 	//r.HandleFunc("/api/movies", createMovie).Methods("POST")
 	//r.HandleFunc("/api/movies/{id}", updateMovie).Methods("PUT")
 	r.HandleFunc("/api/movies/{id}", deleteMovie).Methods("DELETE")
